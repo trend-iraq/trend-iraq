@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ترند - ادمن">
+<meta name="theme-color" content="#D4AF37">
+<title>لوحة التحكم - ترند العراق</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#D4AF37;--gold2:#F5C842;
+  --dark:#070710;--d2:#0F0F1E;--d3:#171728;--d4:#1F1F35;--d5:#272740;
+  --text:#F0F0FF;--muted:#7070A0;
+  --red:#FF4C6A;--green:#00D4A0;--blue:#4C8EFF;
+  --border:rgba(212,175,55,0.18);
+  --sb:env(safe-area-inset-bottom,0px);
+  --st:env(safe-area-inset-top,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;font-family:'Cairo',sans-serif;background:var(--dark);color:var(--text);}
+
+/* TOP BAR */
+.topbar{
+  background:var(--d2);border-bottom:1px solid var(--border);
+  padding:12px 16px;padding-top:calc(12px + var(--st));
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+  position:relative;z-index:10;
+}
+.logo-wrap{flex:1;display:flex;align-items:center;gap:8px;}
+.logo-wrap .crown{font-size:24px;}
+.logo-name{font-size:18px;font-weight:900;color:var(--gold);}
+.logo-sub{font-size:10px;color:var(--muted);}
+.top-add-btn{
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  border:none;font-size:22px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;
+  flex-shrink:0;box-shadow:0 4px 14px rgba(212,175,55,0.4);
+}
+.top-add-btn:active{transform:scale(0.92);}
+
+/* SCROLL */
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+.scroll::-webkit-scrollbar{display:none;}
+
+/* BOTTOM NAV */
+.bnav{
+  background:var(--d2);border-top:1px solid var(--border);
+  display:flex;flex-shrink:0;
+  padding-bottom:var(--sb);
+}
+.ntab{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  padding:10px 4px 8px;cursor:pointer;color:var(--muted);
+  font-size:10px;gap:3px;position:relative;transition:color 0.2s;
+}
+.ntab .ni{font-size:24px;line-height:1;}
+.ntab.on{color:var(--gold);}
+.ntab.on::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:32px;height:3px;background:var(--gold);border-radius:0 0 4px 4px;
+}
+.nbadge{
+  position:absolute;top:6px;left:calc(50% + 4px);
+  background:var(--red);color:#fff;font-size:9px;font-weight:700;
+  min-width:16px;height:16px;border-radius:8px;padding:0 3px;
+  display:none;align-items:center;justify-content:center;
+}
+
+/* PAGES */
+.page{display:none;padding:16px 14px;}
+.page.on{display:block;}
+
+/* STATS */
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.sc{
+  background:var(--d3);border:1px solid var(--border);border-radius:16px;
+  padding:16px 14px;position:relative;overflow:hidden;
+}
+.sc::after{
+  content:'';position:absolute;bottom:-12px;left:-12px;
+  width:56px;height:56px;border-radius:50%;opacity:0.12;
+}
+.sc.g::after{background:var(--gold);}
+.sc.gr::after{background:var(--green);}
+.sc.bl::after{background:var(--blue);}
+.sc.rd::after{background:var(--red);}
+.sc .si{font-size:24px;margin-bottom:8px;}
+.sc .sv{font-size:28px;font-weight:900;}
+.sc.g .sv{color:var(--gold);}
+.sc.gr .sv{color:var(--green);}
+.sc.bl .sv{color:var(--blue);}
+.sc.rd .sv{color:var(--red);}
+.sc .sl{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* SEC */
+.sec-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.sec-t{font-size:15px;font-weight:700;}
+.sec-a{font-size:12px;color:var(--gold);font-weight:600;cursor:pointer;}
+
+/* CARD */
+.card{background:var(--d3);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:12px;}
+.ch{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:space-between;}
+.ct{font-size:14px;font-weight:700;}
+.cb{padding:14px 16px;}
+
+/* PROD ROW */
+.pr{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.pr:last-child{border-bottom:none;padding-bottom:0;}
+.pth{width:48px;height:48px;border-radius:12px;background:var(--d4);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden;}
+.pth img{width:48px;height:48px;object-fit:cover;border-radius:12px;}
+.pi{flex:1;min-width:0;}
+.pn{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pc{font-size:11px;color:var(--muted);margin-top:2px;}
+.pp{font-size:13px;font-weight:700;color:var(--gold);white-space:nowrap;text-align:left;}
+.ib{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--d4);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0;}
+.ib:active{transform:scale(0.88);}
+
+/* BADGE */
+.bdg{display:inline-block;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:600;}
+.bon{background:rgba(0,212,160,0.15);color:var(--green);border:1px solid rgba(0,212,160,0.3);}
+.boff{background:rgba(255,76,106,0.15);color:var(--red);border:1px solid rgba(255,76,106,0.3);}
+
+/* ORDER ROW */
+.or{background:var(--d3);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
+.ot{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.oid{font-size:15px;font-weight:900;color:var(--gold);}
+.odt{font-size:11px;color:var(--muted);}
+.onm{font-size:14px;font-weight:700;}
+.oph{font-size:12px;color:var(--muted);}
+.ob{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
+.otl{font-size:14px;font-weight:700;color:var(--gold);}
+.osel{background:var(--d4);border:1px solid var(--border);border-radius:8px;padding:6px 8px;color:var(--text);font-family:'Cairo',sans-serif;font-size:12px;outline:none;}
+.oact{display:flex;gap:8px;margin-top:10px;}
+
+/* FORMS */
+.fg{margin-bottom:13px;}
+.fl{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:6px;display:block;}
+.fi{width:100%;padding:13px 14px;background:var(--d4);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:'Cairo',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;}
+.fi:focus{border-color:var(--gold);}
+.fi::placeholder{color:var(--muted);}
+textarea.fi{resize:none;height:85px;}
+select.fi option{background:var(--d3);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.btn:active{transform:scale(0.97);}
+.btn-g{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;}
+.btn-o{background:transparent;border:1px solid var(--border);color:var(--text);}
+.btn-r{background:rgba(255,76,106,0.15);border:1px solid rgba(255,76,106,0.3);color:var(--red);}
+
+/* SHEET */
+.sov{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:100;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.sov.on{opacity:1;pointer-events:all;}
+.sh{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--d2);border-radius:22px 22px 0 0;border-top:1px solid var(--border);
+  z-index:101;transform:translateY(100%);transition:transform 0.35s cubic-bezier(.4,0,.2,1);
+  max-height:92vh;overflow-y:auto;
+  padding-bottom:calc(20px + var(--sb));
+}
+.sh.on{transform:translateY(0);}
+.sh-handle{width:38px;height:4px;background:var(--d5);border-radius:2px;margin:12px auto 6px;}
+.sh-title{font-size:17px;font-weight:900;padding:8px 20px 14px;border-bottom:1px solid var(--border);}
+.sh-body{padding:16px 20px;}
+
+/* TOGGLE */
+.tr{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.tr:last-child{border-bottom:none;}
+.tl{font-size:13px;font-weight:600;}
+.ts{font-size:11px;color:var(--muted);margin-top:2px;}
+.tg{width:48px;height:26px;background:var(--d5);border-radius:13px;position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0;}
+.tg.on{background:var(--green);}
+.tg::after{content:'';position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform 0.2s;}
+.tg.on::after{transform:translateX(-22px);}
+
+/* CAT CHIP */
+.cch{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:20px;background:var(--d4);border:1px solid var(--border);font-size:13px;margin:3px;}
+.cx{color:var(--red);font-size:16px;cursor:pointer;}
+
+/* IMAGE UPLOAD */
+.img-upload-area{
+  width:100%;aspect-ratio:4/3;border-radius:14px;
+  border:2px dashed var(--border);background:var(--d4);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;
+}
+.img-upload-area:active{border-color:var(--gold);background:rgba(212,175,55,0.05);}
+.img-upload-area.has-img{border-style:solid;border-color:var(--gold);}
+.img-upload-area img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.img-upload-area .upload-overlay{
+  position:absolute;inset:0;background:rgba(0,0,0,0.5);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  opacity:0;transition:opacity 0.2s;
+}
+.img-upload-area:active .upload-overlay{opacity:1;}
+.upload-icon{font-size:36px;margin-bottom:8px;opacity:0.5;}
+.upload-txt{font-size:13px;color:var(--muted);}
+.upload-sub{font-size:11px;color:var(--muted);margin-top:4px;opacity:0.7;}
+.img-actions{display:flex;gap:8px;margin-top:8px;}
+.img-action-btn{flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--d4);color:var(--text);font-family:'Cairo',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;}
+.img-action-btn:active{transform:scale(0.95);}
+.img-action-btn.del{border-color:rgba(255,76,106,0.3);color:var(--red);}
+
+/* EMPTY */
+.emp{text-align:center;padding:36px 20px;color:var(--muted);}
+.ei{font-size:44px;opacity:0.3;margin-bottom:10px;}
+
+/* NOTIF */
+.notif{
+  position:fixed;top:calc(16px + var(--st));left:50%;transform:translateX(-50%);
+  background:var(--d3);border:1px solid var(--green);color:var(--green);
+  padding:10px 20px;border-radius:25px;font-size:13px;z-index:999;
+  white-space:nowrap;display:none;animation:nf 2.8s forwards;
+}
+@keyframes nf{0%{opacity:0}10%{opacity:1}80%{opacity:1}100%{opacity:0}}
+</style>
+</head>
+<body style="display:flex;flex-direction:column;height:100%;">
+
+<div class="notif" id="notif"></div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="logo-wrap">
+    <span class="crown">👑</span>
+    <div>
+      <div class="logo-name">ترند العراق</div>
+      <div class="logo-sub">لوحة التحكم</div>
+    </div>
+  </div>
+  <button class="top-add-btn" onclick="openS('addS')">＋</button>
+</div>
+
+<!-- SCROLL AREA -->
+<div class="scroll" id="scr">
+
+  <!-- HOME -->
+  <div class="page on" id="pg-home">
+    <div class="sg">
+      <div class="sc g"><div class="si">📦</div><div class="sv" id="s-p">0</div><div class="sl">منتج</div></div>
+      <div class="sc gr"><div class="si">🛒</div><div class="sv" id="s-o">0</div><div class="sl">طلب جديد</div></div>
+      <div class="sc bl"><div class="si">🗂️</div><div class="sv" id="s-c">0</div><div class="sl">قسم</div></div>
+      <div class="sc rd"><div class="si">💰</div><div class="sv" id="s-r">0</div><div class="sl">مبيعات IQD</div></div>
+    </div>
+    <div class="sec-h"><div class="sec-t">آخر المنتجات</div><span class="sec-a" onclick="goTab(1)">عرض الكل</span></div>
+    <div class="card"><div class="cb" id="h-prods"><div class="emp"><div class="ei">📦</div><p>لا توجد منتجات</p></div></div></div>
+    <div class="sec-h" style="margin-top:4px;"><div class="sec-t">آخر الطلبات</div><span class="sec-a" onclick="goTab(2)">عرض الكل</span></div>
+    <div class="card"><div class="cb" id="h-orders"><div class="emp"><div class="ei">🛒</div><p>لا توجد طلبات</p></div></div></div>
+  </div>
+
+  <!-- PRODUCTS -->
+  <div class="page" id="pg-prods">
+    <div class="fg"><input class="fi" placeholder="🔍 بحث..." oninput="fp(this.value)" id="psearch"></div>
+    <select class="fi" id="pcf" onchange="fp()" style="margin-bottom:14px;"><option value="">كل الأقسام</option></select>
+    <div id="plist"><div class="emp"><div class="ei">📦</div><p>لا توجد منتجات</p></div></div>
+  </div>
+
+  <!-- ORDERS -->
+  <div class="page" id="pg-orders">
+    <select class="fi" id="osf" onchange="renderOrders()" style="margin-bottom:14px;">
+      <option value="">كل الطلبات</option>
+      <option value="new">جديد</option>
+      <option value="processing">قيد المعالجة</option>
+      <option value="done">مكتمل</option>
+      <option value="cancelled">ملغي</option>
+    </select>
+    <div id="olist"><div class="emp"><div class="ei">🛒</div><p>لا توجد طلبات</p></div></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="page" id="pg-settings">
+    <div class="card">
+      <div class="ch"><div class="ct">🏪 إعدادات المتجر</div></div>
+      <div class="cb">
+        <div class="fg"><label class="fl">اسم المتجر</label><input class="fi" id="sn" value="ترند العراق"></div>
+        <div class="fg"><label class="fl">رقم واتساب</label><input class="fi" id="sw" placeholder="+9647xxxxxxxxx" type="tel"></div>
+        <div class="fg"><label class="fl">العنوان</label><input class="fi" id="sa" placeholder="بغداد، العراق"></div>
+        <div class="fg"><label class="fl">وصف المتجر</label><textarea class="fi" id="sd" placeholder="أفضل متجر..."></textarea></div>
+        <button class="btn btn-g" onclick="saveSettings()">💾 حفظ الإعدادات</button>
+      </div>
+    </div>
+    <div class="card" style="margin-top:12px;">
+      <div class="ch"><div class="ct">🗂️ الأقسام</div></div>
+      <div class="cb">
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+          <input class="fi" id="cn" placeholder="اسم القسم" style="flex:1;">
+          <input class="fi" id="ci" placeholder="🛍️" style="width:56px;text-align:center;" maxlength="4">
+        </div>
+        <button class="btn btn-o" onclick="addCat()" style="margin-bottom:14px;">+ إضافة قسم</button>
+        <div id="clist"><div style="color:var(--muted);font-size:13px;">لا توجد أقسام بعد</div></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:12px;">
+      <div class="ch"><div class="ct">⚙️ خيارات المتجر</div></div>
+      <div class="cb">
+        <div class="tr"><div><div class="tl">فتح المتجر</div><div class="ts">إظهار المتجر للزبائن</div></div><div class="tg on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="tr"><div><div class="tl">إظهار الأسعار</div><div class="ts">عرض السعر للزبون</div></div><div class="tg on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="tr"><div><div class="tl">نظام الطلبات</div><div class="ts">تفعيل زر الشراء</div></div><div class="tg on" onclick="this.classList.toggle('on')"></div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /scroll -->
+
+<!-- BOTTOM NAV -->
+<nav class="bnav">
+  <div class="ntab on" id="t0" onclick="goTab(0)"><span class="ni">🏠</span>الرئيسية</div>
+  <div class="ntab" id="t1" onclick="goTab(1)"><span class="ni">📦</span>المنتجات<span class="nbadge" id="bp">0</span></div>
+  <div class="ntab" id="t2" onclick="goTab(2)"><span class="ni">🛒</span>الطلبات<span class="nbadge" id="bo">0</span></div>
+  <div class="ntab" id="t3" onclick="goTab(3)"><span class="ni">⚙️</span>الإعدادات</div>
+</nav>
+
+<!-- ADD PRODUCT SHEET -->
+<div class="sov" id="addS-ov" onclick="closeS('addS')"></div>
+<div class="sh" id="addS">
+  <div class="sh-handle"></div>
+  <div class="sh-title">➕ إضافة منتج جديد</div>
+  <div class="sh-body">
+    <div class="fg"><label class="fl">اسم المنتج *</label><input class="fi" id="an" placeholder="اسم المنتج"></div>
+    <div class="fg"><label class="fl">القسم</label><select class="fi" id="ac"><option value="">-- اختر قسم --</option></select></div>
+    <div class="g2">
+      <div class="fg"><label class="fl">السعر (IQD) *</label><input class="fi" id="apr" type="number" placeholder="25000"></div>
+      <div class="fg"><label class="fl">الكمية</label><input class="fi" id="aq" type="number" placeholder="1" value="1"></div>
+    </div>
+    <div class="fg"><label class="fl">الوصف</label><textarea class="fi" id="ad" placeholder="وصف المنتج..."></textarea></div>
+    <div class="fg">
+      <label class="fl">صورة المنتج</label>
+      <input type="file" id="a-file" accept="image/*" style="display:none" onchange="handleImg(this,'a-preview','a-img-data')">
+      <div class="img-upload-area" id="a-preview" onclick="document.getElementById('a-file').click()">
+        <div class="upload-icon">📷</div>
+        <div class="upload-txt">اضغط لاختيار صورة</div>
+        <div class="upload-sub">من الجاليري أو الكاميرا</div>
+        <div class="upload-overlay"><div style="font-size:28px;">🔄</div><div style="font-size:12px;color:#fff;margin-top:6px;">تغيير الصورة</div></div>
+      </div>
+      <div class="img-actions" id="a-img-actions" style="display:none;">
+        <button class="img-action-btn" onclick="document.getElementById('a-file').click()">📷 تغيير</button>
+        <button class="img-action-btn del" onclick="clearImg('a-preview','a-img-data','a-file','a-img-actions')">🗑️ حذف</button>
+      </div>
+      <input type="hidden" id="a-img-data">
+    </div>
+    <div class="g2">
+      <div class="fg"><label class="fl">خصم %</label><input class="fi" id="adc" type="number" placeholder="0" min="0" max="100"></div>
+      <div class="fg"><label class="fl">الحالة</label><select class="fi" id="ast"><option value="active">نشط ✓</option><option value="inactive">مخفي</option></select></div>
+    </div>
+    <button class="btn btn-g" onclick="addProd()">💾 إضافة المنتج</button>
+  </div>
+</div>
+
+<!-- EDIT PRODUCT SHEET -->
+<div class="sov" id="editS-ov" onclick="closeS('editS')"></div>
+<div class="sh" id="editS">
+  <div class="sh-handle"></div>
+  <div class="sh-title">✏️ تعديل المنتج</div>
+  <div class="sh-body">
+    <input type="hidden" id="eid">
+    <div class="fg"><label class="fl">اسم المنتج *</label><input class="fi" id="en"></div>
+    <div class="fg"><label class="fl">القسم</label><select class="fi" id="ec"></select></div>
+    <div class="g2">
+      <div class="fg"><label class="fl">السعر *</label><input class="fi" id="ep" type="number"></div>
+      <div class="fg"><label class="fl">الكمية</label><input class="fi" id="eq" type="number"></div>
+    </div>
+    <div class="fg"><label class="fl">الوصف</label><textarea class="fi" id="ed"></textarea></div>
+    <div class="fg">
+      <label class="fl">صورة المنتج</label>
+      <input type="file" id="e-file" accept="image/*" style="display:none" onchange="handleImg(this,'e-preview','e-img-data')">
+      <div class="img-upload-area" id="e-preview" onclick="document.getElementById('e-file').click()">
+        <div class="upload-icon">📷</div>
+        <div class="upload-txt">اضغط لاختيار صورة</div>
+        <div class="upload-sub">من الجاليري أو الكاميرا</div>
+        <div class="upload-overlay"><div style="font-size:28px;">🔄</div><div style="font-size:12px;color:#fff;margin-top:6px;">تغيير الصورة</div></div>
+      </div>
+      <div class="img-actions" id="e-img-actions" style="display:none;">
+        <button class="img-action-btn" onclick="document.getElementById('e-file').click()">📷 تغيير</button>
+        <button class="img-action-btn del" onclick="clearImg('e-preview','e-img-data','e-file','e-img-actions')">🗑️ حذف</button>
+      </div>
+      <input type="hidden" id="e-img-data">
+    </div>
+    <div class="g2">
+      <div class="fg"><label class="fl">خصم %</label><input class="fi" id="edc" type="number" min="0" max="100"></div>
+      <div class="fg"><label class="fl">الحالة</label><select class="fi" id="est"><option value="active">نشط ✓</option><option value="inactive">مخفي</option></select></div>
+    </div>
+    <button class="btn btn-g" onclick="saveEdit()" style="margin-bottom:10px;">💾 حفظ التغييرات</button>
+    <button class="btn btn-r" onclick="delProd()">🗑️ حذف المنتج</button>
+  </div>
+</div>
+
+<!-- ORDER DETAIL SHEET -->
+<div class="sov" id="odS-ov" onclick="closeS('odS')"></div>
+<div class="sh" id="odS">
+  <div class="sh-handle"></div>
+  <div class="sh-title">📋 تفاصيل الطلب</div>
+  <div class="sh-body" id="od-body"></div>
+</div>
+
+<script>
+// DATA
+let D={
+  products:JSON.parse(localStorage.getItem('tiq_products')||'[]'),
+  cats:JSON.parse(localStorage.getItem('tiq_categories')||'[]'),
+  orders:JSON.parse(localStorage.getItem('tiq_orders')||'[]'),
+  settings:JSON.parse(localStorage.getItem('tiq_settings')||'{}'),
+};
+const sv=()=>{
+  localStorage.setItem('tiq_products',JSON.stringify(D.products));
+  localStorage.setItem('tiq_categories',JSON.stringify(D.cats));
+  localStorage.setItem('tiq_orders',JSON.stringify(D.orders));
+  localStorage.setItem('tiq_settings',JSON.stringify(D.settings));
+};
+
+// NOTIF
+function notif(m){
+  const n=document.getElementById('notif');
+  n.textContent=m;n.style.display='block';
+  n.style.animation='none';n.offsetHeight;n.style.animation='nf 2.8s forwards';
+  setTimeout(()=>n.style.display='none',2800);
+}
+
+// TABS
+const pgs=['home','prods','orders','settings'];
+function goTab(i){
+  pgs.forEach((p,j)=>{
+    document.getElementById('pg-'+p).classList.toggle('on',i===j);
+    document.getElementById('t'+j).classList.toggle('on',i===j);
+  });
+  document.getElementById('scr').scrollTop=0;
+  if(i===0)renderHome();
+  if(i===1){renderProds();fillPCF();}
+  if(i===2)renderOrders();
+  if(i===3)renderCats();
+}
+
+// SHEETS
+function openS(id){
+  if(id==='addS')fillCatSels();
+  document.getElementById(id+'-ov').classList.add('on');
+  document.getElementById(id).classList.add('on');
+}
+function closeS(id){
+  document.getElementById(id+'-ov').classList.remove('on');
+  document.getElementById(id).classList.remove('on');
+}
+
+// CATS
+function fillCatSels(){
+  const o='<option value="">-- اختر قسم --</option>'+D.cats.map(c=>`<option value="${c.name}">${c.icon}${c.name}</option>`).join('');
+  ['ac','ec'].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=o;});
+}
+function fillPCF(){
+  const e=document.getElementById('pcf');if(!e)return;
+  e.innerHTML='<option value="">كل الأقسام</option>'+D.cats.map(c=>`<option value="${c.name}">${c.icon}${c.name}</option>`).join('');
+}
+function addCat(){
+  const n=document.getElementById('cn').value.trim();
+  const ic=document.getElementById('ci').value.trim()||'📁';
+  if(!n){notif('❌ اكتب اسم القسم');return;}
+  D.cats.push({id:Date.now(),name:n,icon:ic});sv();
+  document.getElementById('cn').value='';document.getElementById('ci').value='';
+  renderCats();fillCatSels();fillPCF();notif('✅ تم إضافة القسم: '+n);
+}
+function delCat(id){D.cats=D.cats.filter(c=>c.id!=id);sv();renderCats();fillCatSels();}
+function renderCats(){
+  const e=document.getElementById('clist');
+  if(!D.cats.length){e.innerHTML='<div style="color:var(--muted);font-size:13px;">لا توجد أقسام بعد</div>';return;}
+  e.innerHTML=D.cats.map(c=>`<span class="cch">${c.icon}${c.name}<span class="cx" onclick="delCat(${c.id})">×</span></span>`).join('');
+}
+
+// IMAGE HANDLING
+function handleImg(input, previewId, dataId){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const data=e.target.result;
+    document.getElementById(dataId).value=data;
+    const prev=document.getElementById(previewId);
+    prev.classList.add('has-img');
+    // clear placeholder content, add img
+    prev.innerHTML=`<img src="${data}"><div class="upload-overlay"><div style="font-size:28px;">🔄</div><div style="font-size:12px;color:#fff;margin-top:6px;">تغيير الصورة</div></div>`;
+    // show action buttons
+    const actId=previewId.replace('preview','img-actions');
+    const act=document.getElementById(actId);
+    if(act)act.style.display='flex';
+  };
+  reader.readAsDataURL(file);
+}
+function clearImg(previewId, dataId, fileId, actionsId){
+  document.getElementById(dataId).value='';
+  document.getElementById(fileId).value='';
+  const prev=document.getElementById(previewId);
+  prev.classList.remove('has-img');
+  prev.innerHTML=`<div class="upload-icon">📷</div><div class="upload-txt">اضغط لاختيار صورة</div><div class="upload-sub">من الجاليري أو الكاميرا</div><div class="upload-overlay"><div style="font-size:28px;">🔄</div><div style="font-size:12px;color:#fff;margin-top:6px;">تغيير الصورة</div></div>`;
+  document.getElementById(actionsId).style.display='none';
+}
+
+// PRODUCTS
+function addProd(){
+  const n=document.getElementById('an').value.trim();
+  const p=parseFloat(document.getElementById('apr').value)||0;
+  if(!n){notif('❌ اكتب اسم المنتج');return;}
+  if(!p){notif('❌ اكتب السعر');return;}
+  D.products.push({
+    id:Date.now(),name:n,
+    cat:document.getElementById('ac').value,
+    price:p,qty:parseInt(document.getElementById('aq').value)||1,
+    desc:document.getElementById('ad').value.trim(),
+    img:document.getElementById('a-img-data').value||'',
+    discount:parseInt(document.getElementById('adc').value)||0,
+    status:document.getElementById('ast').value,
+    date:new Date().toLocaleDateString('ar-IQ'),
+  });
+  sv();closeS('addS');
+  ['an','apr','ad','adc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('aq').value='1';
+  clearImg('a-preview','a-img-data','a-file','a-img-actions');
+  badges();renderHome();notif('✅ تم إضافة المنتج');
+}
+function renderProds(){
+  const s=document.getElementById('psearch')?.value.toLowerCase()||'';
+  const cf=document.getElementById('pcf')?.value||'';
+  let list=D.products;
+  if(cf)list=list.filter(p=>p.cat===cf);
+  if(s)list=list.filter(p=>p.name.toLowerCase().includes(s));
+  const e=document.getElementById('plist');
+  if(!list.length){e.innerHTML='<div class="emp"><div class="ei">📦</div><p>لا توجد منتجات</p></div>';return;}
+  e.innerHTML=list.map(p=>`
+    <div class="pr">
+      <div class="pth">${p.img?`<img src="${p.img}" onerror="this.outerHTML='📦'">` :'📦'}</div>
+      <div class="pi">
+        <div class="pn">${p.name}</div>
+        <div class="pc">${p.cat||'—'} · <span class="bdg ${p.status==='active'?'bon':'boff'}">${p.status==='active'?'نشط':'مخفي'}</span></div>
+      </div>
+      <div style="text-align:left;flex-shrink:0;">
+        <div class="pp">${p.price.toLocaleString()}</div>
+        <div style="font-size:10px;color:var(--muted);">IQD</div>
+      </div>
+      <div class="ib" onclick="openEdit(${p.id})">✏️</div>
+    </div>
+  `).join('');
+}
+function fp(){renderProds();}
+function openEdit(id){
+  const p=D.products.find(x=>x.id==id);if(!p)return;
+  fillCatSels();
+  document.getElementById('eid').value=p.id;
+  document.getElementById('en').value=p.name;
+  document.getElementById('ep').value=p.price;
+  document.getElementById('eq').value=p.qty;
+  document.getElementById('ed').value=p.desc||'';
+  document.getElementById('edc').value=p.discount||0;
+  document.getElementById('est').value=p.status;
+  // load image
+  const prev=document.getElementById('e-preview');
+  const act=document.getElementById('e-img-actions');
+  if(p.img){
+    document.getElementById('e-img-data').value=p.img;
+    prev.classList.add('has-img');
+    prev.innerHTML=`<img src="${p.img}"><div class="upload-overlay"><div style="font-size:28px;">🔄</div><div style="font-size:12px;color:#fff;margin-top:6px;">تغيير الصورة</div></div>`;
+    act.style.display='flex';
+  } else {
+    document.getElementById('e-img-data').value='';
+    prev.classList.remove('has-img');
+    prev.innerHTML=`<div class="upload-icon">📷</div><div class="upload-txt">اضغط لاختيار صورة</div><div class="upload-sub">من الجاليري أو الكاميرا</div><div class="upload-overlay"><div style="font-size:28px;">🔄</div><div style="font-size:12px;color:#fff;margin-top:6px;">تغيير الصورة</div></div>`;
+    act.style.display='none';
+  }
+  setTimeout(()=>{const s=document.getElementById('ec');for(let o of s.options)if(o.value===p.cat)o.selected=true;},60);
+  openS('editS');
+}
+function saveEdit(){
+  const id=parseInt(document.getElementById('eid').value);
+  const i=D.products.findIndex(p=>p.id==id);if(i<0)return;
+  D.products[i]={...D.products[i],
+    name:document.getElementById('en').value.trim(),
+    cat:document.getElementById('ec').value,
+    price:parseFloat(document.getElementById('ep').value)||0,
+    qty:parseInt(document.getElementById('eq').value)||1,
+    desc:document.getElementById('ed').value.trim(),
+    img:document.getElementById('e-img-data').value||'',
+    discount:parseInt(document.getElementById('edc').value)||0,
+    status:document.getElementById('est').value,
+  };
+  sv();closeS('editS');renderProds();renderHome();notif('✅ تم تحديث المنتج');
+}
+function delProd(){
+  const id=parseInt(document.getElementById('eid').value);
+  if(!confirm('حذف المنتج؟'))return;
+  D.products=D.products.filter(p=>p.id!=id);
+  sv();closeS('editS');renderProds();renderHome();badges();notif('🗑️ تم حذف المنتج');
+}
+
+// ORDERS
+function renderOrders(){
+  const f=document.getElementById('osf')?.value||'';
+  let list=D.orders;
+  if(f)list=list.filter(o=>o.status===f);
+  const e=document.getElementById('olist');
+  if(!list.length){e.innerHTML='<div class="emp"><div class="ei">🛒</div><p>لا توجد طلبات</p></div>';return;}
+  const sm={new:'جديد',processing:'قيد المعالجة',done:'مكتمل',cancelled:'ملغي'};
+  e.innerHTML=[...list].reverse().map(o=>`
+    <div class="or">
+      <div class="ot"><div class="oid">#${String(o.id).slice(-4)}</div><div class="odt">${o.date||''}</div></div>
+      <div class="onm">${o.customer}</div>
+      <div class="oph">${o.phone} · ${o.address||''}</div>
+      <div class="ob">
+        <div class="otl">${o.total?.toLocaleString()} IQD</div>
+        <select class="osel" onchange="updOS(${o.id},this.value)">
+          ${Object.entries(sm).map(([v,l])=>`<option value="${v}" ${o.status===v?'selected':''}>${l}</option>`).join('')}
+        </select>
+      </div>
+      <div class="oact">
+        <button class="btn btn-o" style="padding:9px;font-size:12px;" onclick="viewO(${o.id})">👁️ التفاصيل</button>
+        <button class="btn btn-r" style="padding:9px;font-size:12px;" onclick="delO(${o.id})">🗑️ حذف</button>
+      </div>
+    </div>
+  `).join('');
+}
+function updOS(id,s){
+  const o=D.orders.find(o=>o.id==id);if(o){o.status=s;sv();badges();}notif('✅ تم تحديث الحالة');
+}
+function delO(id){
+  if(!confirm('حذف الطلب؟'))return;
+  D.orders=D.orders.filter(o=>o.id!=id);sv();renderOrders();badges();notif('🗑️ تم حذف الطلب');
+}
+function viewO(id){
+  const o=D.orders.find(o=>o.id==id);if(!o)return;
+  document.getElementById('od-body').innerHTML=`
+    <div style="background:var(--d3);border-radius:12px;padding:14px;margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <span style="color:var(--gold);font-weight:900;font-size:18px;">#${String(o.id).slice(-4)}</span>
+        <span style="font-size:12px;color:var(--muted);">${o.date||''}</span>
+      </div>
+      <div style="font-size:13px;line-height:2.2;">
+        <b>الاسم:</b> ${o.customer}<br>
+        <b>الهاتف:</b> ${o.phone}<br>
+        <b>العنوان:</b> ${o.address||'—'}<br>
+        <b>ملاحظات:</b> ${o.notes||'—'}
+      </div>
+    </div>
+    <div style="background:var(--d3);border-radius:12px;padding:14px;">
+      <div style="font-weight:700;margin-bottom:10px;">المنتجات المطلوبة:</div>
+      ${(o.items||[]).map(i=>`
+        <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;">
+          <span>${i.name} × ${i.qty||1}</span>
+          <span style="color:var(--gold);">${(i.price*(i.qty||1)).toLocaleString()} IQD</span>
+        </div>
+      `).join('')}
+      <div style="display:flex;justify-content:space-between;padding-top:12px;font-weight:900;font-size:15px;">
+        <span>الإجمالي</span><span style="color:var(--gold);">${o.total?.toLocaleString()} IQD</span>
+      </div>
+    </div>
+    <button class="btn btn-o" onclick="closeS('odS')" style="margin-top:14px;">إغلاق</button>
+  `;
+  openS('odS');
+}
+
+// HOME
+function renderHome(){
+  badges();
+  document.getElementById('s-p').textContent=D.products.length;
+  document.getElementById('s-o').textContent=D.orders.filter(o=>o.status==='new').length;
+  document.getElementById('s-c').textContent=D.cats.length;
+  const rev=D.orders.filter(o=>o.status==='done').reduce((s,o)=>s+(o.total||0),0);
+  document.getElementById('s-r').textContent=rev>=1000?Math.round(rev/1000)+'K':rev.toLocaleString();
+  const rp=document.getElementById('h-prods');
+  if(!D.products.length){rp.innerHTML='<div class="emp"><div class="ei">📦</div><p>لا توجد منتجات بعد</p></div>';return;}
+  rp.innerHTML=D.products.slice(-5).reverse().map(p=>`
+    <div class="pr">
+      <div class="pth">${p.img?`<img src="${p.img}" onerror="this.outerHTML='📦'">` :'📦'}</div>
+      <div class="pi"><div class="pn">${p.name}</div><div class="pc">${p.cat||'—'}</div></div>
+      <div class="pp">${p.price.toLocaleString()} IQD</div>
+    </div>
+  `).join('');
+  const ro=document.getElementById('h-orders');
+  if(!D.orders.length){ro.innerHTML='<div class="emp"><div class="ei">🛒</div><p>لا توجد طلبات بعد</p></div>';return;}
+  ro.innerHTML=[...D.orders].reverse().slice(0,3).map(o=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+      <div style="width:40px;height:40px;border-radius:10px;background:var(--d4);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🛒</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:700;">${o.customer}</div>
+        <div style="font-size:11px;color:var(--muted);">${o.phone}</div>
+      </div>
+      <div style="text-align:left;flex-shrink:0;">
+        <div style="font-size:13px;font-weight:700;color:var(--gold);">${o.total?.toLocaleString()}</div>
+        <div style="font-size:10px;color:var(--muted);">IQD</div>
+      </div>
+    </div>
+  `).join('');
+}
+function badges(){
+  const pc=D.products.length,oc=D.orders.filter(o=>o.status==='new').length;
+  const bp=document.getElementById('bp'),bo=document.getElementById('bo');
+  bp.textContent=pc;bp.style.display=pc?'flex':'none';
+  bo.textContent=oc;bo.style.display=oc?'flex':'none';
+}
+function saveSettings(){
+  D.settings={...D.settings,storeName:document.getElementById('sn').value,whatsapp:document.getElementById('sw').value,address:document.getElementById('sa').value,desc:document.getElementById('sd').value};
+  sv();notif('✅ تم حفظ الإعدادات');
+}
+
+window.addEventListener('storage',()=>{
+  D.products=JSON.parse(localStorage.getItem('tiq_products')||'[]');
+  D.orders=JSON.parse(localStorage.getItem('tiq_orders')||'[]');
+  renderHome();
+});
+
+renderHome();
+</script>
+</body>
+</html>
